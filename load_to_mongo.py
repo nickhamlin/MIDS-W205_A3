@@ -3,29 +3,25 @@
 Created on Sun Jul  5 17:05:38 2015
 
 @author: nicholashamlin
-http://www.laurentluce.com/posts/upload-and-download-files-tofrom-amazon-s3-using-pythondjango/
 """
 import json
 import os
 
 import pymongo
-from boto.s3.connection import S3Connection
+from connections import connect_to_s3,connect_to_mongo
 from boto.s3.key import Key
 
-awsconn = S3Connection('AKIAI5Z33FRUEKBGOWFA', 'y2JLQ8x6sSOvHP3CmmDe49X/NEQrN88PGTRP5CVL')
+#connect to AWS
+awsconn =connect_to_s3()
 myBucket = awsconn.get_bucket('hamlin-mids-assignment3')
 myKey = Key(myBucket)
 
 #connect to Mongo
-try:
-    conn=pymongo.MongoClient()
-    print "Connected!"
-except pymongo.errors.ConnectionFailure, e:
-   print "Connection failed : %s" % e 
-
+conn=connect_to_mongo()
 db_tweets = conn['db_tweets']
 tweets = db_tweets.tweets
-tweets.remove()
+#Use following line to purge any existing tweets in the mongo collection - used for debugging
+#tweets.remove()
 
 def load_tweets(fname):
     """ Loads tweets from locally stored json to mongodb"""
@@ -38,17 +34,17 @@ def load_tweets(fname):
                 tweets.insert(tweet)
                 success+=1
             except:
-                #put some logging here
                 fail+=1
+        #not required - but useful for debugging
         print str(success)+' tweets entered, '+str(fail)+' failed from '+str(fname)
-            
+
 if __name__=='__main__':
     for chunk in myBucket.list():
         keyString = str(chunk.key)
-        if keyString[0]=='#':
-            #download from s3 if you haven't already
+        if keyString[0]=='#': #only pay attention to files starting with a hashtag
+            #download from s3 if file doesn't exist locally already
             if not os.path.exists(keyString):
                 chunk.get_contents_to_filename(keyString)
             load_tweets(keyString)
+            #not required - but useful for debugging
             print str(tweets.count())+' are currently stored'
-           

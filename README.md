@@ -75,3 +75,4 @@ I chose to implement backups via a shell script rather than Python because of th
 - http://streamhacker.com/2010/05/10/text-classification-sentiment-analysis-naive-bayes-classifier/
 - http://stackoverflow.com/questions/3086973/how-do-i-convert-this-list-of-dictionaries-to-a-csv-file-python
 - https://bespokeblog.wordpress.com/2011/07/11/basic-data-plotting-with-matplotlib-part-3-histograms/
+- http://www.laurentluce.com/posts/upload-and-download-files-tofrom-amazon-s3-using-pythondjango/

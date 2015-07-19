@@ -18,13 +18,13 @@ conn=connect_to_s3()
 myBucket = conn.get_bucket('hamlin-mids-assignment3')
 myKey = Key(myBucket)
 
-
+#Class for serializing tweets into chunks
 class TweetSerializer:
    out = None
    first = True
    count = 0
    tweet_count=0
-   
+
    def write_to_s3 (self,file):
         """ Given a file, upload it to S3 bucket specified below"""
         myKey.key = file.name
@@ -33,7 +33,7 @@ class TweetSerializer:
         except Exception as e:
             print 'Error, Upload to S3 failed: '+ str(e)
         return
-        
+
    def start(self,term,start_time):
       self.count += 1
       self.tweet_count=0
@@ -56,17 +56,23 @@ class TweetSerializer:
       self.first = False
       self.out.write(json.dumps(tweet._json).encode('utf8'))
       self.tweet_count+=1
-      
+
 
 api=connect_to_twitter()
-        
+
 def gather_tweets (start,end,query,threshold):
+    """Gather all tweets between start and end dates for a query term
+    chunked into json files containing up to a particular threshold of
+     tweets per file """
+
     print "Starting search for "+query
     query_start=start
-    lock=threading.RLock()
+    lock=threading.RLock() #only write complete tweets
     query_end=query_start+datetime.timedelta(days = 1)
     serializer = TweetSerializer()
-    serializer.start(query, query_start)        
+    serializer.start(query, query_start)
+    
+    #This WHILE structures allows for easy handling of errors
     while query_start <= end:
         try:
             for tweet in tweepy.Cursor(api.search,q=query, since = query_start, until = query_end).items():
@@ -83,9 +89,10 @@ def gather_tweets (start,end,query,threshold):
             break
         except BaseException as e:
             print 'Error, program failed: '+ str(e)
-            time.sleep(60)
+            time.sleep(60) #Sleep for 1m if an error occurs, then retry
 
 if __name__=="__main__":
+    #Define relevant dates and search terms and start collecting tweets
     end=datetime.date.today()
     start=datetime.date(2015,7,6)
     search1='#USAvJPN'

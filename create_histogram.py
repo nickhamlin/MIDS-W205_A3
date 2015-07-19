@@ -19,7 +19,7 @@ retweets=db_tweets.retweets
 #load all lexical diversity scores into a list, excluding N/A statuses
 to_plot=[i['lexical_diversity'] for i in list(users.find({"status": {"$ne":"N/A: No tweets available"}},{'_id':0,'lexical_diversity':1}))]
 
-#create plot and save to png file
+#create plot
 plt.hist(to_plot, bins=50,color='b')
 plt.title("Lexical Diversity for Users in db_tweets.users")
 plt.xlabel("Value")
@@ -34,11 +34,11 @@ for i in top_users:
     #skip users if we're missing lexical diversity data for them
     except IndexError:
         continue
-    
+
 #add vertical line for means
 mean=np.mean(to_plot)
+print "Mean lexical diversity is "+str(mean) #for reference
 plt.axvline(mean,linewidth=2,color='r')
-#plt.show()
-plt.savefig('lexical_diversity_histogram.png', bbox_inches='tight')
-print "Mean lexical diversity is "+str(mean)
 
+#save result to PNG file
+plt.savefig('lexical_diversity_histogram.png', bbox_inches='tight')

@@ -57,3 +57,7 @@ https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/%23WorldCupFinal-2015
 https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/%23WorldCupFinal-2015-07-06-8.json
 https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/%23WorldCupFinal-2015-07-06-9.json
 https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/%23WorldCupFinal-2015-07-06-10.json
+
+Mongo Backups:
+https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/mongobackup/db_tweets/tweets.metadata.json
+https://s3-us-west-2.amazonaws.com/hamlin-mids-assignment3/mongobackup/db_tweets/tweets.bson
