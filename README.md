@@ -7,6 +7,7 @@
 - **load_to_mongo.py**: Extracts chunked tweets and automatically loads them (one tweet per document) into a MongoDB collection.  For speed, if a file that is stored in S3 also happens to exist locally already, this file will not download a redundant copy again.
 - **top_retweets.py**: Queries the Mongo tweet collection to identify the top 30 most retweeted tweets.  These tweets, along with user and location metadata, are then written to a separate collection called "retweets" in the same mongo database.
 - **lexical_diversity.py**: Calculates lexical diversity for the first 50 available tweets from each user represented in db_tweets.tweets and stores the results to db_tweets.users.
+- **create_histogram.py**: Uses matplotlib to create a histogram of all lexical diversities gathered and highlights those of key users.
 - **get_followers.py**: Gathers the first 10,000 followers for each user appearing in the list of top 30 retweets stored in the "retweets" collection and stores the result in a separate database (db_followers) in a collection called "followers".  Twitter's rate limiting makes it impractical to gather all followers, especially for very famous users with vast fan bases, which is why I'm limiting my data collection to the first 10,000 results.  Luis confirmed that this was an appropriate design choice during office hours on July 9.
 - **compare_followers.py**: Identifies the differences in lists of followers between two dates by querying the "followers" collection stored in db_followers.
 - **sentiment_analysis.py**: Uses NTLK to implement a basic positive/negative sentiment analysis of the text of the top 30 retweets stored in db_tweets.retweets using a Naive Bayes model.
@@ -63,6 +64,8 @@ I chose to implement backups via a shell script rather than Python because of th
 
 ####Third Party:
 - NLTK (for word tokenization and sentiment analysis)
+- matplotlib
+- numpy
 - Tweepy
 - Boto
 - Pymongo
